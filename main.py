@@ -12,48 +12,61 @@ led_rgb(Color.WHITE)
 #def calibration():
    # time = time-time()
    
-def checkdroite():  # renvoit true si y'a pas de mur 
+def checkdroite():
+    led_rgb(Color.RED)# renvoit true si y'a pas de mur 
     V = False
     droite()
-    sleep(1200)
+    sleep(1800)
     motor_stop()
     print("droit")
     if (line_sensor(LineSensor.R1)== WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE):
         V = True
     
-    gauche()
-    sleep(800)
+    while not (line_sensor(LineSensor.R1)== BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK):
+        gauche()
     motor_stop()
+    
+    sleep(100)
     print("check fini ")
-    sleep(500)
+    
     return (V)
     
-def checkgauche(): # renvoit true si y'a pas de mur 
+def checkgauche():
+    led_rgb(Color.BLUE)# renvoit true si y'a pas de mur 
     V = False
     gauche()
-    sleep(1000)
+    sleep(900)
     motor_stop()
     print("gauche")
     if (line_sensor(LineSensor.R1)== WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE):
         V = True
     
-    while not line_sensor(LineSensor.R1)== BLACK:
-        droite()
+    #while not line_sensor(LineSensor.R1)== BLACK:
+     #   droite()
     
-    motor_stop()
-    print("check fini ")
+    #motor_stop()
+    #print("check fini ")
     sleep(500)
     return (V)
     
 
 def decision ():
     mur_gauche = checkgauche()
-    
-    if mur_gauche == True  :
-        #gauche()
-        sleep(1100)
+    mur_droite = checkdroite()
+    led_rgb(Color.WHITE)
+    if (mur_gauche == True  and mur_droite == False) :
+        gauche()
+        sleep(900)
         motor_stop()
-    #else:
+    elif mur_droite == True  :
+        droite()
+        sleep(900)
+        motor_stop()
+    elif (mur_gauche == True  and mur_droite == True):
+        gauche()
+        sleep(1800)
+    
+        motor_stop()
      #   mur_droite = checkdroite()
     #if (mur_droite == True and mur_gauche == False):
      #   droite()
@@ -67,20 +80,24 @@ def decision ():
     
         
 def toutdroit():
-    while not (line_sensor(LineSensor.R1)== BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK):
+    while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==BLACK):
+        
+    #while not (line_sensor(LineSensor.R1)== BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK):
         motor_run(Motor.LEFT, speed, Direction.FORWARD)
         motor_run(Motor.RIGHT, speed, Direction.FORWARD)
         
-        sleep(50)
+        sleep(120)
     motor_stop()
 
 def droite():
+    
     motor_run(Motor.LEFT, speed, Direction.FORWARD)
     motor_run(Motor.RIGHT, speed, Direction.BACKWARD)
     
 def gauche():
-    motor_run(Motor.LEFT, speed, Direction.BACKWARD)
-    motor_run(Motor.RIGHT, speed, Direction.FORWARD)
+    while line_sensor(LineSensor.L1)== BLACK:
+        motor_run(Motor.LEFT, speed, Direction.BACKWARD)
+        motor_run(Motor.RIGHT, speed, Direction.FORWARD)
     
 #while True :
     
@@ -102,16 +119,40 @@ def gauche():
         #sleep(1000)
         #motor_stop()
         #toutdroit()
-
+def resteblanc ():
+    if line_sensor(LineSensor.R2)== BLACK:
+        while not line_sensor(LineSensor.R2)== WHITE:
+            led_rgb(Color.RED)
+            motor_run(Motor.LEFT, speed, Direction.FORWARD)
+            motor_run(Motor.RIGHT, speed-10 , Direction.FORWARD)
+            sleep(100)
+            motor_stop()
+            sleep(100)
+    if line_sensor(LineSensor.L2)== BLACK:    
+        while not line_sensor(LineSensor.L2)== WHITE:
+            led_rgb(Color.BLUE)
+            motor_run(Motor.LEFT, speed -10 , Direction.FORWARD)
+            motor_run(Motor.RIGHT, speed , Direction.FORWARD)
+            sleep(100)
+            motor_stop()
+            sleep(100)
+    
+    
+    
 
 while True:
+    led_rgb(Color.WHITE)
     toutdroit()
-    decision()
+    #gauche()
+   # resteblanc()
+    #decision()
 
 
  
 
     
+
+
 
 
 
