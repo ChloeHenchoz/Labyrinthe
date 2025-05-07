@@ -1,159 +1,94 @@
-"projet labyrinthe 26.03.2025, Natasha et Chloé"
+"""Projet Laby 04.05.25 """
+#Imports
+
 from maprincess import *
 from microbit import *
 
-#constantes
+#Constantes
+
 WHITE = 0
 BLACK = 1
-speed = 30
+speed = 20
 
-print("depart")
-led_rgb(Color.WHITE)
-#def calibration():
-   # time = time-time()
-   
-def checkdroite():
-    led_rgb(Color.RED)# renvoit true si y'a pas de mur 
-    V = False
-    droite()
-    sleep(1800)
-    motor_stop()
-    print("droit")
-    if (line_sensor(LineSensor.R1)== WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE):
-        V = True
-    
-    while not (line_sensor(LineSensor.R1)== BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK):
-        gauche()
-    motor_stop()
-    
-    sleep(100)
-    print("check fini ")
-    
-    return (V)
-    
-def checkgauche():
-    led_rgb(Color.BLUE)# renvoit true si y'a pas de mur 
-    V = False
-    gauche()
-    sleep(900)
-    motor_stop()
-    print("gauche")
-    if (line_sensor(LineSensor.R1)== WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE):
-        V = True
-    
-    #while not line_sensor(LineSensor.R1)== BLACK:
-     #   droite()
-    
-    #motor_stop()
-    #print("check fini ")
-    sleep(500)
-    return (V)
-    
+#Définitions
 
-def decision ():
-    mur_gauche = checkgauche()
-    mur_droite = checkdroite()
-    led_rgb(Color.WHITE)
-    if (mur_gauche == True  and mur_droite == False) :
-        gauche()
-        sleep(900)
+def Tout_Droit(): # Tant que R2 + R1 sont sur la ligne et que M n'y est pas, on avance jusqu'à que M arrive sur une ligne 
+    
+    if (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==BLACK and line_sensor(LineSensor.R1)==BLACK  and line_sensor(LineSensor.L1)==WHITE):
+        led_rgb(Color.WHITE)
+        
+        while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==BLACK and line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==WHITE):
+            motor_run(Motor.ALL, speed, Direction.FORWARD)
+            sleep(50)
+        
+        
         motor_stop()
-    elif mur_droite == True  :
-        droite()
-        sleep(900)
-        motor_stop()
-    elif (mur_gauche == True  and mur_droite == True):
-        gauche()
-        sleep(1800)
-    
-        motor_stop()
-     #   mur_droite = checkdroite()
-    #if (mur_droite == True and mur_gauche == False):
-     #   droite()
-      #  sleep(1200)
-     #   motor_stop()
-    #elif (mur_droite == False and mur_gauche == False):
-     #   toutdroit()
-    #motor_stop()
-    #sleep(800)
-   # toutdroit()
-    
+        print(line_sensor_data_all())
+        print(line_sensor_all())
+        print("motor stop 1")
         
-def toutdroit():
-    while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==BLACK):
         
-    #while not (line_sensor(LineSensor.R1)== BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK):
-        motor_run(Motor.LEFT, speed, Direction.FORWARD)
-        motor_run(Motor.RIGHT, speed, Direction.FORWARD)
-        
-        sleep(120)
-    motor_stop()
-
-def droite():
-    
-    motor_run(Motor.LEFT, speed, Direction.FORWARD)
-    motor_run(Motor.RIGHT, speed, Direction.BACKWARD)
-    
-def gauche():
-    while line_sensor(LineSensor.L1)== BLACK:
-        motor_run(Motor.LEFT, speed, Direction.BACKWARD)
-        motor_run(Motor.RIGHT, speed, Direction.FORWARD)
-    
-#while True :
-    
-    ##sleep(100)
-   #print("boucle")
-   # if (line_sensor(LineSensor.R2)==BLACK and line_sensor(LineSensor.R1)==WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE) :
-    #    toutdroit()
-    #    print("je roule")
-        
-    #if (line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==BLACK and line_sensor(LineSensor.M)==BLACK) :
-    #    while not (line_sensor(LineSensor.R1)== WHITE and line_sensor(LineSensor.L1)==WHITE and line_sensor(LineSensor.M)==WHITE):
-      #      droite()
-            
-            
-        #motor_stop()
-        #print("je m'arrête")
-        #sleep(200)
-        #droite()
-        #sleep(1000)
-        #motor_stop()
-        #toutdroit()
-def resteblanc ():
-    if line_sensor(LineSensor.R2)== BLACK:
-        while not line_sensor(LineSensor.R2)== WHITE:
-            led_rgb(Color.RED)
+        while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==WHITE and line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==WHITE):
+            led_rgb(Color.ORANGE)
             motor_run(Motor.LEFT, speed, Direction.FORWARD)
-            motor_run(Motor.RIGHT, speed-10 , Direction.FORWARD)
-            sleep(100)
+            motor_run(Motor.RIGHT, speed +20 , Direction.FORWARD)
+            sleep(50)
+            
+        motor_stop()
+        print(line_sensor_data_all())
+        print(line_sensor_all())
+        print("motor stop 2")
+    
+def Coin(): # si M + R1 + R2 sont sur une ligne, ce qui devrait être un coin, on tourne sur place jusqu'à que M ne soit plus sur la ligne
+    
+    if (line_sensor(LineSensor.M) == BLACK and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == BLACK):
+        led_rgb(Color.BLUE)
+         
+        while not line_sensor(LineSensor.M) == WHITE:   
+            motor_run(Motor.LEFT, speed, Direction.BACKWARD)
+            motor_run(Motor.RIGHT, speed, Direction.FORWARD)
+            sleep(50)
+            
+        motor_stop()
+        
+#         while not ( line_sensor(LineSensor.R1) == BLACK and line_sensor(LineSensor.R2) == BLACK): # si R1 et/ou R2 ne sont plus sur la ligne on cherche à retrouver la ligne en avançant plus vite à gauche 
+#             led_rgb(Color.RED)
+#             motor_run(Motor.LEFT, speed + 10, Direction.FORWARD)
+#             motor_run(Motor.RIGHT, speed, Direction.FORWARD)
+#             sleep(50)
+#           
+#         motor_stop()
+        
+        if (line_sensor(LineSensor.M) == BLACK and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == BLACK and line_sensor(LineSensor.L1) == BLACK ):
+            led_rgb(Color.VIOLET)
+            motor_run(Motor.LEFT, speed, Direction.BACKWARD)
+            sleep(1000)
             motor_stop()
-            sleep(100)
-    if line_sensor(LineSensor.L2)== BLACK:    
-        while not line_sensor(LineSensor.L2)== WHITE:
-            led_rgb(Color.BLUE)
-            motor_run(Motor.LEFT, speed -10 , Direction.FORWARD)
-            motor_run(Motor.RIGHT, speed , Direction.FORWARD)
-            sleep(100)
+            motor_run(Motor.RIGHT, speed, Direction.BACKWARD)
+            sleep(1000)
             motor_stop()
-            sleep(100)
+           
+def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus sur la ligne mais R2 si, on tourne à droite pour en "faire le tour" jusqu'à que R2 +R1 soient sur la ligne mais pas M 
     
+    if (line_sensor(LineSensor.M) == WHITE and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == WHITE):
+        led_rgb(Color.GREEN)
+     
+        
+        while not line_sensor(LineSensor.R1) == BLACK:
+            motor_run(Motor.LEFT, speed, Direction.FORWARD)
+            
+            sleep(50)
+        
+        
+
+# Boucle principale 
+while True :
     
+    Tout_Droit()
+    sleep(50)
     
-
-while True:
-    led_rgb(Color.WHITE)
-    toutdroit()
-    #gauche()
-   # resteblanc()
-    #decision()
-
-
- 
-
+    Coin()
+    sleep(50)
     
-
-
-
-
-
-
+    Edge()
+    sleep(50)
