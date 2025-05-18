@@ -1,4 +1,4 @@
-"""Projet Laby 18.05.25 """
+"""Projet Laby 18.05.25"""
 
 #Imports
 
@@ -14,7 +14,7 @@ speed = 13
 
 #Définitions
 
-def Tout_Droit(): # Tant que R2 + R1 sont sur la ligne et que M n'y est pas, on avance jusqu'à que M arrive sur une ligne (j'ai enlevé la condition pour L1 qui contribuait au bug je crois) 
+def Tout_Droit(): # Tant que R2 + R1 sont sur la ligne et que M n'y est pas, on avance jusqu'à que M arrive sur une ligne  
     
     if (line_sensor(LineSensor.M) == WHITE and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == BLACK )  :
         
@@ -26,7 +26,7 @@ def Tout_Droit(): # Tant que R2 + R1 sont sur la ligne et que M n'y est pas, on 
             sleep(40)
         
        
-        
+#       Si on dépasse la ligne en allant trop à droite (R2 ==WHITE), on corrige en allant plus vite d'un côté 
         while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==WHITE and line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==WHITE):
             led_rgb(Color.ORANGE)
             motor_run(Motor.LEFT, speed, Direction.FORWARD)
@@ -49,7 +49,7 @@ def Coin(): # si M + R1 + R2 sont sur une ligne, ce qui devrait être un coin, o
             sleep(25)
         
         
-#         
+       
             
 def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus sur la ligne mais R2 si, on tourne à droite pour en "faire le tour" jusqu'à que R2 +R1 soient sur la ligne mais pas M 
     
@@ -60,14 +60,14 @@ def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus s
         
 
         
-        while not line_sensor(LineSensor.R1) == BLACK:
+        while not line_sensor(LineSensor.R1) == BLACK: # on tourne tant qu'on a pas atteint la ligne avec R1 
             
             led_rgb(Color.VIOLET)
             motor_run(Motor.RIGHT, 0 , Direction.FORWARD)
             motor_run(Motor.LEFT, speed +15 , Direction.FORWARD)
             sleep(50)
             
-        if line_sensor(LineSensor.R2) == WHITE:
+        if line_sensor(LineSensor.R2) == WHITE: # Si on est pas bien alligné quand on a fini de tourné, on corrige pour pouvoir continuer (sinon on ne peut entrer dans aucune des autres boucles ) 
             while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==WHITE and line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==WHITE):
            
                 led_rgb(Color.PURPLE)
@@ -82,7 +82,7 @@ def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus s
       
             
          
-def Fini():
+def Fini():  #  on verifie s'il y a un objet tout proche, pour finir le labyrinthe en sortant de la boucle while fini() == True 
     x = ultrasonic()
     print(x)
     if 3 < x < 6 :
@@ -90,15 +90,9 @@ def Fini():
         return False
     return True
          
-                
-        
-            
-
         
 
 # Boucle principale
-
-
 
 while True :
     
