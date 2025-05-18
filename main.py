@@ -1,4 +1,4 @@
-"""Projet Laby 17.05.25 """
+"""Projet Laby 18.05.25 """
 
 #Imports
 
@@ -11,7 +11,7 @@ import radio
 
 WHITE = 0
 BLACK = 1
-speed = 10
+speed = 13
 
 
 #Définitions
@@ -102,14 +102,14 @@ def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus s
     Fini()
     if (line_sensor(LineSensor.M) == WHITE and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == WHITE):
         led_rgb(Color.GREEN)
-        motor_stop()
+#         motor_stop()
         sleep(350)
         
-        led_rgb(Color.RED)
-        motor_run(Motor.RIGHT, speed +10, Direction.FORWARD)
-        motor_run(Motor.LEFT, speed + 10 , Direction.FORWARD)
-        sleep(500)
-            
+#         led_rgb(Color.RED)
+#         motor_run(Motor.RIGHT, speed +10, Direction.FORWARD)
+#         motor_run(Motor.LEFT, speed + 10 , Direction.FORWARD)
+#         sleep(500)
+#             
         
         while not line_sensor(LineSensor.R1) == BLACK:
             Fini()
