@@ -1,4 +1,4 @@
-"""Projet Laby 18.05.25 """
+"""Projet Laby 17.05.25 """
 
 #Imports
 
@@ -6,7 +6,7 @@ from maprincess import *
 from microbit import *
 import radio
         
-    
+global Run
 #Constantes
 
 WHITE = 0
@@ -54,7 +54,7 @@ def Tout_Droit(): # Tant que R2 + R1 sont sur la ligne et que M n'y est pas, on 
             
     
 def Coin(): # si M + R1 + R2 sont sur une ligne, ce qui devrait être un coin, on tourne sur place jusqu'à que M ne soit plus sur la ligne
-    Fini()
+    
     
     if (line_sensor(LineSensor.M) == BLACK and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == BLACK):
         led_rgb(Color.BLUE)
@@ -91,7 +91,7 @@ def Coin(): # si M + R1 + R2 sont sur une ligne, ce qui devrait être un coin, o
          
            
         while (line_sensor_all() == (1, 1, 0, 1, 0)) :
-            Fini()
+            
             led_rgb(Color.VIOLET)
             motor_run(Motor.ALL, speed, Direction.BACKWARD)
             sleep(25)
@@ -99,7 +99,7 @@ def Coin(): # si M + R1 + R2 sont sur une ligne, ce qui devrait être un coin, o
   
             
 def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus sur la ligne mais R2 si, on tourne à droite pour en "faire le tour" jusqu'à que R2 +R1 soient sur la ligne mais pas M 
-    Fini()
+    
     if (line_sensor(LineSensor.M) == WHITE and line_sensor(LineSensor.R2) == BLACK and line_sensor(LineSensor.R1) == WHITE):
         led_rgb(Color.GREEN)
 #         motor_stop()
@@ -112,7 +112,7 @@ def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus s
 #             
         
         while not line_sensor(LineSensor.R1) == BLACK:
-            Fini()
+            
             led_rgb(Color.VIOLET)
             motor_run(Motor.RIGHT, 0 , Direction.FORWARD)
             motor_run(Motor.LEFT, speed +15 , Direction.FORWARD)
@@ -120,7 +120,7 @@ def Edge():  # si on rencontre un bord, c'est à dire que M et R1 ne sont plus s
             
         if line_sensor(LineSensor.R2) == WHITE:
             while (line_sensor(LineSensor.M)== WHITE and line_sensor(LineSensor.R2)==WHITE and line_sensor(LineSensor.R1)==BLACK and line_sensor(LineSensor.L1)==WHITE):
-                Fini()
+           
                 led_rgb(Color.PURPLE)
                 motor_run(Motor.LEFT, speed, Direction.FORWARD)
                 motor_run(Motor.RIGHT, speed +20 , Direction.FORWARD)
@@ -166,7 +166,10 @@ def Fini():
     x = ultrasonic()
     print(x)
     if 3 < x < 6 :
-        Run = False
+        
+        print("FINI")
+        return False
+    return True
          
                 
         
@@ -179,24 +182,29 @@ def Fini():
 Run = True
 
 while True :
-    while Run == True:
+    
+    while Fini() == True:
     
 
     
 
         Tout_Droit()
         sleep(25)
+       
         
         Coin()
         sleep(25)
         
+        
         Edge()
         sleep(25)
         
-       
+        
         sleep(25)
+       
         
     motor_stop()
+    print("TERMINÉ")
     
         
     
